@@ -1,0 +1,63 @@
+version: '2'
+services:
+  krakend:
+    image: devopsfaith/krakend:latest
+    volumes:
+    - ./krakend:/etc/krakend/
+    - /etc/group:/etc/group:ro
+    - /etc/passwd:/etc/passwd:ro
+    ports:
+    - "8080:8080"
+    command:
+    - run
+    - -c
+    - /etc/krakend/config.json
+    - -d
+  app1:
+    image: ruby:2.6.5-buster
+    volumes:
+    - ./app1:/app
+    - /etc/group:/etc/group:ro
+    - /etc/passwd:/etc/passwd:ro
+    environment:
+      BUNDLE_PATH: /app/.bundle
+    working_dir: /app
+    ports:
+    - "8081:4567"
+    entrypoint:
+    - bundle
+    command:
+    - exec
+    - ruby
+    - app.rb
+    - -o
+    - 0.0.0.0
+    # entrypoint:
+    # - tail
+    # command:
+    # - -f
+    # - /dev/null
+  app2:
+    image: ruby:2.6.5-buster
+    volumes:
+    - ./app2:/app
+    - /etc/group:/etc/group:ro
+    - /etc/passwd:/etc/passwd:ro
+    environment:
+      BUNDLE_PATH: /app/.bundle
+    working_dir: /app
+    ports:
+    - "8082:4567"
+    entrypoint:
+    - bundle
+    command:
+    - exec
+    - ruby
+    - app.rb
+    - -o
+    - 0.0.0.0
+    # entrypoint:
+    # - tail
+    # command:
+    # - -f
+    # - /dev/null
